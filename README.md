@@ -52,4 +52,4 @@ Contributions via Pull Requests are appreciated.
 All contributions must use the MIT License.
 
 This repository uses the MIT license, see the
-[LICENSE](https://github.com/docusign/eg-01-php-jwt/blob/master/LICENSE) file.
+LICENSE file.
