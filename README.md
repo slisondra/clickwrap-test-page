@@ -6,6 +6,8 @@ There is no application server for the files. The
 [GitHub pages](https://pages.github.com/) feature is used to
 serve the pages. 
 
+[View the test page and form](https://docusign.github.io/clickwrap-test-page).
+
 ## index.html
 The index.html file is a form to collect Clickwrap parameters. It makes a
 GET request on the **agree.html** page. Since there is no 
