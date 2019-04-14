@@ -311,7 +311,7 @@
             eachParamsArr = raw.split('&'),
             obj = {};
         if (eachParamsArr && eachParamsArr.length) {
-            eachParamsArr.map(param => {
+            eachParamsArr.map(function (param){
                 let keyValuePair = param.split('=')
                 let key = keyValuePair[0];
                 let value = keyValuePair[1];
@@ -349,7 +349,7 @@
         let value = 200
           , timerMS = 300
           , el = $('#feedback h3 span')
-          , show = () => {if (countdownInfo.countdown) {el.text(value)} value -= 1}
+          , show = function(){if (countdownInfo.countdown) {el.text(value)} value -= 1}
           ;
         
         show();

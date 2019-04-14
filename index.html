@@ -163,7 +163,7 @@
             , eachParamsArr = raw.split('&')
             , obj = {};
           if (eachParamsArr && eachParamsArr.length) {
-              eachParamsArr.map(param => {
+              eachParamsArr.map(function (param) {
                   let keyValuePair = param.split('=')
                   let key = keyValuePair[0];
                   let value = keyValuePair[1];
