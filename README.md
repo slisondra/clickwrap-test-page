@@ -1,6 +1,7 @@
 # Clickwrap test page
 
-This project includes two HTML files, index.html and agree.html.
+This project includes three HTML files, index.html, login.html 
+and site.html.
 
 There is no application server for the files. The 
 [GitHub pages](https://pages.github.com/) feature is used to
@@ -10,15 +11,12 @@ serve the pages.
 
 ## index.html
 The index.html file is a form to collect Clickwrap parameters. It makes a
-GET request on the **agree.html** page. Since there is no 
+GET request on the **login.html** page. Since there is no 
 application server, parameters are passed using the 
 fragment (#) string.
 
 ### The Clickwrap parameters
-1. **ClientUser ID** An id for the user. Can be the user's name, email,
-   an id number in your user database, etc.
-   
-2. **Environment hostname** The hostname section of the DocuSign environment
+1. **Environment hostname** The hostname section of the DocuSign environment
    used for your account.
 
    Available from: your Clickwrap code popup window.
@@ -31,18 +29,26 @@ fragment (#) string.
 
    Available from: your Clickwrap code popup window.
 
-## agree.html
-The agree.html file is an example web page that loads the DocuSign
-clickwrap SDK.
+## login.html
+An example login page for a name and password. For this example,
+the password is ignored. When the login button is clicked,
+the page's JavaScript combines the clickwrap settings from
+the prior page with the form's `name` setting, and calls
+the clickwrap JavaScript SDK. 
+
+After it returns success, the JavaScript loads the home page
+of the site, `site.html`
 
 ## Using the test page
-Fill in the form, and click the button `Show the Clickwrap page`
+1. Fill in the form, and click the button `Show the example login page`
+1. Fill in the login form (the password is optional), and click
+   `Login`
 
 **Remember** that the agreement ceremony is only shown once per 
-ClientUser ID. To show the agreement ceremony again, either 
-change the ClientUser ID or update the Clickwrap settings
+Login Name (used for the ClientUser ID parameter). 
+To show the agreement ceremony again, either 
+change the Name on the login page or update the Clickwrap settings
 on DocuSign.
-
 
 ## Support, Contributions, License
 
