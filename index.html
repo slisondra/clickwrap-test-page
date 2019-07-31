@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <title>DocuSign Clickwrap test page</title>
@@ -17,6 +18,17 @@
     #saveUrl {width: 22em;display:inline; }
     .notifyjs-bootstrap-error {padding: .5em .5em .5em 2em; font-size: x-large;}
     #envp {margin-bottom: 0;}
+
+    body .modal-dialog { /* Width */
+      max-width: 900px;
+      width: auto !important;
+    }
+    .modal {
+      text-align: center;
+    }
+    #gif1 {display: none;}
+    #clickcode { font-size: x-small; }
+
   </style>
 </head>
 <body>
@@ -31,14 +43,18 @@
 <div class="collapse" id="helpSection">
   <div class="container">
     <div class="row">
-      <div class="col-sm-8 col-md-7 py-4">
+      <div class="col-sm-9 col-md-8 py-4">
         <h4>Creating a Clickwrap agreement</h4>
         <ol>
           <li>Log into DocuSign, click <strong>Manage</strong> at the top of the screen.</li>
           <li>Click <strong>Clickwraps</strong> at the top of the screen</li>
           <li>Create a clickwrap agreement</li>
           <li>Click the <strong>Get Code</strong> button on the right side to open the code window.</li>
-          <li>Copy the settings from the code window to the form below.</li>
+          <li>Click the <strong>Copy</strong> button in the code window, then paste into the form below.
+            <button type="button" class="btn-sm btn-outline-info" data-toggle="modal" data-target="#gifModal">
+                Show me
+            </button>
+          </li>
         </ol>
       </div>
     </div>
@@ -49,7 +65,7 @@
 <div class="container">
   <div class="row align-items-center">
     <div class="col-8">
-      <h4>Complete this form using the settings from the “Code” window of your clickwrap
+      <h4>Complete this form by using the “Code” window of your clickwrap
 
       <button class="ml-1 my-3 btn btn-sm btn-outline-info" type="button" data-toggle="collapse" data-target="#helpSection" 
         aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,32 +76,22 @@
 
       <form>
       <div class="form-group">
-            <label for="environmentHost">* Environment hostname</label>
-            <p id="envp">
-              <strong>https://</strong>
-              <input type="text" class="form-control" id="environmentHost" aria-describedby="environmentHelp" 
-                required placeholder="demo, na2, eu, etc">
-              <strong>.docusign.net</strong>
+            <label for="clickcode">Copy your Clickwrap code block into this field. 
+                <button type="button" class="btn-sm btn-outline-info" data-toggle="modal" data-target="#gifModal">
+                    Show me
+                </button>
+            </label>
+            <p>
+              <textarea class="form-control" id="clickcode" aria-describedby="clickcodeHelp" 
+                required rows="5" cols="90" ></textarea>
             </p>
-            <small id="environmentHelp" class="form-text text-muted">
-                Required: Enter just the hostname of the environment.</small>
-        </div>
-        <div class="form-group">
-              <label for="accountId">* Account ID</label>
-          <input type="text" class="form-control" id="accountId" aria-describedby="accountIdHelp" 
-            required placeholder="Enter Account ID (long format)">
-          <small id="accountIdHelp" class="form-text text-muted">
-              Required: Your Account ID in the long, guid format</small>
-        </div>
-        <div class="form-group">
-            <label for="clickwrapId">* Clickwrap ID</label>
-            <input type="text" class="form-control" id="clickwrapId" aria-describedby="clickwrapIdHelp" 
-              required placeholder="Enter Clickwrap ID">
-            <small id="clickwrapIdHelp" class="form-text text-muted">
-                Required: Your Clickwrap ID</small>
+            <small id="clickcodeHelp" class="form-text text-muted">
+                This field is required: Use the <b>Get Code</b> button from the DocuSign webtool.
+                Copy the entire Clickwrap code block into this field.</small>
+            <small id="feedback" class="form-text text-muted"></small>
         </div>
 
-        <p><strong>Tip! you can save the login page's url for later use: </strong>
+        <p><strong>Tip! you can save the login page's url for later use by your colleagues: </strong>
           <br /><input type="text" class="form-control input-sm" id="saveUrl">
           <button class="ml-1 btn btn-sm btn-outline-info" type="button" id="saveUrlBtn"
               aria-expanded="false" aria-label="Copy to clipboard">
@@ -95,11 +101,34 @@
 
         <button id="clickSubmit" type="submit" class="btn btn-primary">Show the example login page</button>
         <a class="ml-4" target="_blank" href="https://github.com/docusign/clickwrap-test-page">Source files</a>
+        <p>&nbsp;</p><p>&nbsp;</p>
       </form>
     </div>
   </div>
 </div>
-</body>
+
+<!-- Modal -->
+<div class="modal fade" id="gifModal" tabindex="-1" role="dialog" aria-labelledby="gifModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="gifModalLabel">Copying the Clickwrap code to this form</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+              <img id="gif1"  width="820"/>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -109,33 +138,55 @@
     $( document ).ready(function() {
         const notify_warning_t = { className:"error", globalPosition: "top center"};
 
-        function valuesString(includeCU = false) {
-          const accountId = $("#accountId").val()
-                , clickwrapId = $("#clickwrapId").val()
-                , clientUserId = $("#clientUserId").val()
-                , environmentHost = $("#environmentHost").val()
-                , r0 = "#a=" + accountId + "&cw=" + clickwrapId + 
-                       "&eh=" + environmentHost
-                , r = includeCU ? r0 + "&cu=" + clientUserId : r0
-                ;
-          return r 
+        let accountId, clickwrapId, environmentHost;
+
+        /**
+         * sets accountId, clickwrapId, environmentHost
+         * Returns ok
+         */
+        function parseClickcode(){
+          $('#feedback').html('');
+          let raw = $("#clickcode").val()
+            , clickwrapRegex = /https:\/\/(\w+).docusign.net'[\s\S]*accountId: '([0-9a-zA-Z\-]+)'[\s\S]*clickwrapId: '([0-9a-zA-Z\-]+)'/gm
+            , matchArray = clickwrapRegex.exec(raw)
+            ;
+          if (matchArray == null) {
+            return false; // no cigar!
+          }
+          environmentHost = matchArray[1];
+          accountId       = matchArray[2];
+          clickwrapId     = matchArray[3];
+          //$('#feedback').html('Environment: ' + environmentHost + '<br/>' +
+          //                    'Account Id: '   + accountId + '<br/>' +
+          //                    'Clickwrap Id: ' + clickwrapId );
+          return true
+        }
+        
+        function valuesString() {
+          let ok = parseClickcode();
+          if (!ok) {return false}
+          return "#a=" + accountId + "&cw=" + clickwrapId + 
+                    "&eh=" + environmentHost;
         }
 
         let onClick = function _onClick(){
-            const values = valuesString();
+            const values = valuesString()
+                , validForm = $("form")[0].reportValidity();
 
-            if ($("form")[0].reportValidity()) {
+            if (values && validForm) {
                 // valid
                 const url = "login.html" + values; 
                 window.location = encodeURI(url);
-            } else {
+            } else if (!validForm) {
                 $.notify("Please fill in the form", notify_warning_t);
+            } else {
+              $.notify("Please fill in the form by copying the clickwrap code from the DocuSign web tool", notify_warning_t);
             }
             return false;
         }
 
         let urlUpdate = function _urlUpdate() {
-          const values = valuesString(false)
+          const values = valuesString()
               , raw = window.location.href
               , i = raw.indexOf('#')
               , base = i == -1 ? raw : raw.substring(0, i - 1)
@@ -158,10 +209,16 @@
                   obj[key] = value;
               })
           }
-          $("#accountId").val(obj.a);
-          $("#clickwrapId").val(obj.cw);
-          $("#clientUserId").val(obj.cu);
-          $("#environmentHost").val(obj.eh);
+          accountId = obj.a;
+          clickwrapId = obj.cw;
+          environmentHost = obj.eh;
+          
+          let fakeCode = "// Clickwrap settings: \n" +
+                         "site: 'https://" + environmentHost + ".docusign.net'" + 
+                         "\naccountId: '" + accountId + "'" +
+                         "\nclickwrapId: '" + clickwrapId + "'";
+          $("#clickcode").val(fakeCode);
+
         }
 
         let copyToClipboad = function _copyToClipboard() {
@@ -174,14 +231,26 @@
           $temp.remove();
         }
 
+        let gifShow = function _gifShow() {
+          // See https://stackoverflow.com/a/21104927/64904
+          let src="assets/clickwrap.gif"
+            , timeout = 0 // no delay
+            , $gif1 = $("#gif1")
+            ;
+            $gif1.show();
+            setTimeout(function() {
+                $gif1.attr('src', src);
+            }, timeout);
+        }
+
         // The mainline
         loadFromHash();
         $("#clickSubmit").click(onClick);
         $("#saveUrlBtn").click(copyToClipboad);
-        $("#accountId, #clickwrapId, #clientUserId, #environmentHost").keyup(urlUpdate);
+        $("#clickcode").keyup(urlUpdate);
+        $("#gifModal").on("shown.bs.modal", gifShow);
         urlUpdate();
     });
 </script>
-
-
+</body>
 </html>
