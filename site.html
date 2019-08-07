@@ -78,6 +78,15 @@
                 <p class="">
                     <a id="loginAgain" href="#" class="btn btn-secondary my-2">Login again</a>
                 </p>
+                <form>
+                    <p><strong>Tip! you can save the login page's url for later testing by your colleagues: </strong>
+                        <br /><input type="text" class="form-control input-sm" id="saveUrl">
+                        <button class="ml-1 mt-2 btn btn-sm btn-outline-info" type="button" id="saveUrlBtn"
+                            aria-expanded="false" aria-label="Copy to clipboard">
+                            Copy to clipboard
+                        </button>  
+                    </p>
+                </form>        
             </div>
         </section>
 
@@ -102,12 +111,31 @@
 <script>
     $( document ).ready(function() {
 
-        let loginAgain = function _oginAgain() {
+        let loginAgain = function _loginAgain() {
             window.history.back()
+        }
+
+        let copyToClipboad = function _copyToClipboard() {
+          // Copy the saveUrl value to the clipboard
+          // See https://stackoverflow.com/q/22581345/64904
+          var $temp = $("<input>");
+          $("body").append($temp);
+          $temp.val($("#saveUrl").val()).select();
+          document.execCommand("copy");
+          $temp.remove();
         }
 
         // The mainline
         $("#loginAgain").click(loginAgain);
+        $("#saveUrlBtn").click(copyToClipboad);
+
+        // Set saveUrl
+        // We don't have access to the url from window.history.
+        // So we re-create the url:
+        let siteUrl = window.location.href
+          , loginUrl =  siteUrl.replace('site.html', 'login.html')
+          ;
+        $("#saveUrl").val(loginUrl);
     });
 </script>
 </body>
