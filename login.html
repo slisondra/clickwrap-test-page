@@ -159,7 +159,9 @@
             });
         }
         let agreed = function _agreed() {
-            window.location.href = "site.html"
+            // Send along the settings in the hash. We only do this
+            // so we can recreate the complete login page url within the site page.
+            window.location.href = "site.html" + window.location.hash
         }
         
         // Start the clickwrap flow
